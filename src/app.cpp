@@ -13,7 +13,14 @@ App::App(std::vector<std::string>& args) {
 App::~App() {}
 
 int App::run() {
+  cloud_ = std::make_unique<CloudCyl>();
+  lidar_grabber_ = std::make_unique<RPLIDARPortGrabber>("com3");
+  stream_ = std::make_unique<Stream>();
   while (running_) {
+      lidar_grabber_->read(*cloud_);
+      stream_->write_cloud(*cloud_);
+
+      running_ = false;
   }
 
   return 0;

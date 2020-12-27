@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "lidar.hpp"
+#include "stream.hpp"
 
 class App {
  public:
@@ -23,4 +24,5 @@ class App {
   bool running_;
   std::unique_ptr<CloudCyl> cloud_;
   std::unique_ptr<RPLIDARPortGrabber> lidar_grabber_;
+  std::unique_ptr<Stream> stream_;
 };

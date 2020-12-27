@@ -9,7 +9,7 @@ using namespace rp::standalone;
 
 const unsigned MinRPLIDARRPM = 200;
 const unsigned MaxRPLIDARRPM = 1023;
-const unsigned DefaultRPLIDARRPM = 200;
+const unsigned DefaultRPLIDARRPM = 660;
 
 const unsigned DefaultBaudrate = 256000;
 
@@ -25,7 +25,7 @@ enum class RPLIDARScanModes {
 class RPLIDARPortGrabber {
  public:
   RPLIDARPortGrabber(std::string portname,
-                     unsigned DefaultBaudrate,
+                     unsigned baudrate = DefaultBaudrate,
                      RPLIDARScanModes scan_mode = RPLIDARScanModes::SENSITIVITY,
                      unsigned rpm = DefaultRPLIDARRPM);
   virtual ~RPLIDARPortGrabber();
