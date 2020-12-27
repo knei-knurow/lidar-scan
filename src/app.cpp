@@ -5,17 +5,46 @@
 //
 App::App(std::vector<std::string>& args) {
   running_ = true;
-  if (!parse_args(args)) {
+
+  // Print help
+  if (check_arg(args, "-h", "--help") || args.empty()) {
+    print_help();
     running_ = false;
+    return;
+  }
+
+  // RPLDAR port
+  std::string port = args[0];
+
+  // RPLIDAR RPM
+  auto rpm = DefaultRPLIDARRPM;
+  std::stringstream(get_arg_value(args, "-r", "--rpm")) >> rpm;
+
+  // RPLIDAR Mode
+  RPLIDARScanModes mode;
+  unsigned mode_temp = unsigned(RPLIDARScanModes::SENSITIVITY);
+  std::stringstream(get_arg_value(args, "-m", "--mode")) >> mode_temp;
+  mode = static_cast<RPLIDARScanModes>(mode_temp %
+                                       unsigned(RPLIDARScanModes::RPLIDAR_SCAN_MODES_COUNT));
+
+  // Initialize objects
+  cloud_ = std::make_unique<CloudCyl>();
+  lidar_grabber_ = std::make_unique<RPLIDARPortGrabber>(port, DefaultBaudrate, mode, rpm);
+  if (!lidar_grabber_->get_status()) {
+    running_ = false;
+    return;
+  }
+  stream_ = std::make_unique<Stream>();
+  if (!stream_->get_status()) {
+    running_ = false;
+    return;
   }
 }
 
 App::~App() {}
 
 int App::run() {
-  cloud_ = std::make_unique<CloudCyl>();
-  lidar_grabber_ = std::make_unique<RPLIDARPortGrabber>("com3");
-  stream_ = std::make_unique<Stream>();
+  // Main program loop
   while (running_) {
     lidar_grabber_->read(*cloud_);
     stream_->write_cloud(*cloud_);
@@ -25,10 +54,13 @@ int App::run() {
 }
 
 void App::print_help() {
-  std::cout << "-----------------------------------------------------------\n"
-            << "Lidar Scan\n"
-            << "-----------------------------------------------------------\n"
-            << "Source: https://github.com/knei-knurow/lidar-scan\n";
+  std::cout << "Source:\thttps://github.com/knei-knurow/lidar-scan\n"
+            << "Usage:\tlidar-scan port [options]\n"
+            << "Options:\n"
+            << "\t-h --help\tPrint this message\n"
+            << "\t-m --mode\tRPLIDAR mode (0 - 4)\n"
+            << "\t-r --rpm \tRPLIDAR revolutions per minute (" << MinRPLIDARRPM << " - "
+            << MaxRPLIDARRPM << ")\n";
 }
 
 void App::close() {
@@ -68,13 +100,4 @@ std::string App::get_arg_value(std::vector<std::string>& all_args,
     all_args.erase(it, it + 2);
   }
   return value;
-}
-
-bool App::parse_args(std::vector<std::string>& args) {
-  // Print help
-  if (check_arg(args, "-h", "--help")) {
-    print_help();
-    return false;
-  }
-  return true;
 }
