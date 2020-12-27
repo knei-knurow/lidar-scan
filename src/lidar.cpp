@@ -15,9 +15,7 @@ RPLIDARPortGrabber::RPLIDARPortGrabber(std::string portname,
     rpm = DefaultRPLIDARRPM;
   }
   rpm_ = rpm;
-  if (!launch()) {
-    stop();
-  }
+  launch();
 }
 
 RPLIDARPortGrabber::~RPLIDARPortGrabber() {
@@ -171,9 +169,13 @@ void RPLIDARPortGrabber::stop() {
   std::clog << "Stopping motor and deallocating LIDAR driver." << std::endl;
   auto res = driver_->stopMotor();
   if (IS_FAIL(res)) {
-    std::cerr << "ERROR: Unable to start motor." << std::endl;
+    std::cerr << "ERROR: Unable to stop motor." << std::endl;
     status_ = false;
   }
   driver_->disconnect();
   rplidar::RPlidarDriver::DisposeDriver(driver_);
+}
+
+bool RPLIDARPortGrabber::get_status() const {
+    return status_;
 }

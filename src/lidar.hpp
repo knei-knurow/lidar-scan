@@ -28,8 +28,8 @@ class RPLIDARPortGrabber {
                      unsigned baudrate = DefaultBaudrate,
                      RPLIDARScanModes scan_mode = RPLIDARScanModes::SENSITIVITY,
                      unsigned rpm = DefaultRPLIDARRPM);
-  virtual ~RPLIDARPortGrabber();
-  virtual bool read(CloudCyl& cloud);
+  ~RPLIDARPortGrabber();
+  bool read(CloudCyl& cloud);
 
   bool print_info();
   bool print_health();
@@ -37,6 +37,7 @@ class RPLIDARPortGrabber {
   bool launch();
   bool scan();
   void stop();
+  bool get_status() const;
 
  private:
   const std::string portname_;

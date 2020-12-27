@@ -36,3 +36,7 @@ bool Stream::write_cloud(const CloudCyl& cloud_cyl) {
   }
   return status_;
 }
+
+bool Stream::get_status() const {
+    return status_;
+}

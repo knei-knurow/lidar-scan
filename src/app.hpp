@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <sstream>
 #include "lidar.hpp"
 #include "stream.hpp"
 
@@ -20,7 +21,6 @@ class App {
                             const std::string& short_arg,
                             const std::string& long_arg,
                             const std::string& default_value = "");
-  bool parse_args(std::vector<std::string>& args);
 
   bool running_;
   std::unique_ptr<CloudCyl> cloud_;
