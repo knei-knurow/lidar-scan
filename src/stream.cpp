@@ -16,7 +16,7 @@ bool Stream::write_cloud_separator() {
 	auto now = std::chrono::steady_clock::now();
 	auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(now - last_cloud_).count();
 
-	status_ = 0 <= std::fprintf(stream_, "! %i %ll\n", ++count_, elapsed_time);
+	status_ = 0 <= std::fprintf(stream_, "! %i %llu\n", ++count_, elapsed_time);
 	return status_;
 }
 
@@ -27,7 +27,7 @@ bool Stream::write_point(const PointCyl& pt_cyl) {
 
 bool Stream::write_cloud(const CloudCyl& cloud_cyl) {
 	write_cloud_separator();
-	for (int i = 0; i < cloud_cyl.size; i++) {
+	for (size_t i = 0; i < cloud_cyl.size; i++) {
 		if (!status_) {
 			return status_;
 		}
