@@ -10,6 +10,7 @@ class App {
 
   int run();
   void print_help();
+  void close();
 
  private:
   bool check_arg(std::vector<std::string>& all_args,
