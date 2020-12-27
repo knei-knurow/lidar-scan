@@ -177,5 +177,5 @@ void RPLIDARPortGrabber::stop() {
 }
 
 bool RPLIDARPortGrabber::get_status() const {
-    return status_;
+  return status_;
 }

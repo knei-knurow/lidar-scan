@@ -8,9 +8,9 @@ App::App(std::vector<std::string>& args) {
 
   // Print help
   if (check_arg(args, "-h", "--help") || args.empty()) {
-      print_help();
-      running_ = false;
-      return;
+    print_help();
+    running_ = false;
+    return;
   }
 
   // RPLDAR port
@@ -24,19 +24,20 @@ App::App(std::vector<std::string>& args) {
   RPLIDARScanModes mode;
   unsigned mode_temp = unsigned(RPLIDARScanModes::SENSITIVITY);
   std::stringstream(get_arg_value(args, "-m", "--mode")) >> mode_temp;
-  mode = static_cast<RPLIDARScanModes>(mode_temp % unsigned(RPLIDARScanModes::RPLIDAR_SCAN_MODES_COUNT));
+  mode = static_cast<RPLIDARScanModes>(mode_temp %
+                                       unsigned(RPLIDARScanModes::RPLIDAR_SCAN_MODES_COUNT));
 
   // Initialize objects
   cloud_ = std::make_unique<CloudCyl>();
   lidar_grabber_ = std::make_unique<RPLIDARPortGrabber>(port, DefaultBaudrate, mode, rpm);
   if (!lidar_grabber_->get_status()) {
-      running_ = false;
-      return;
+    running_ = false;
+    return;
   }
   stream_ = std::make_unique<Stream>();
   if (!stream_->get_status()) {
-      running_ = false;
-      return;
+    running_ = false;
+    return;
   }
 }
 
@@ -53,13 +54,13 @@ int App::run() {
 }
 
 void App::print_help() {
-    std::cout << "Source: https://github.com/knei-knurow/lidar-scan\n"
-        << "Usage: lidar-scan port [options]\n"
-        << "Options:\n"
-        << "\t-h --help\tPrint this message\n"
-        << "\t-m --mode\tRPLIDAR mode\n"
-        << "\t-m --mode\tRPLIDAR mode\n"
-        << "\t-r --rpm \tRPLIDAR mode\n";
+  std::cout << "Source:\thttps://github.com/knei-knurow/lidar-scan\n"
+            << "Usage:\tlidar-scan port [options]\n"
+            << "Options:\n"
+            << "\t-h --help\tPrint this message\n"
+            << "\t-m --mode\tRPLIDAR mode (0 - 4)\n"
+            << "\t-r --rpm \tRPLIDAR revolutions per minute (" << MinRPLIDARRPM << " - "
+            << MaxRPLIDARRPM << ")\n";
 }
 
 void App::close() {
