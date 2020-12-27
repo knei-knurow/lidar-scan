@@ -1,0 +1,43 @@
+#/bin/bash
+
+# This script installs RPLIDAR SDK.
+
+# _log prints its first argument to the standard output, if the
+# global variable verbose is set to true. If it is false, it does
+# nothing.
+_log() {
+  if [ $verbose = true ]; then
+    printf "$1"
+  fi
+}
+
+set -e
+
+verbose=false
+if [[ "$1" = "-v" || "$1" = "--verbose" ]]; then
+  verbose=true
+fi
+
+rplidar_url="https://github.com/Slamtec/rplidar_sdk.git"
+
+if [ -d rplidar_sdk ]; then
+  printf "install_rplidar: rplidar_sdk directory already exists\n"
+  exit 1
+fi
+
+_log "install_rplidar: cloning the sdk..."
+git clone "$rplidar_url" &>/dev/null
+_log "ok\n"
+
+# Disable strange warnings that arise...sometimes
+if [ $(uname -s) = "Linux" ]; then
+  printf "install_rplidar: Linux host detected, applying ugly fix..."
+  sed -i '57iCXXFLAGS += -Wno-narrowing' rplidar_sdk/sdk/mak_def.inc
+  printf "ok\n"
+fi
+
+_log "install_rplidar: making the sdk..."
+cd rplidar_sdk/sdk && make &>/dev/null
+_log "ok\n"
+
+printf "install_rplidar: done\n"
