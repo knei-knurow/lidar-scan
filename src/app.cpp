@@ -19,8 +19,6 @@ int App::run() {
   while (running_) {
     lidar_grabber_->read(*cloud_);
     stream_->write_cloud(*cloud_);
-
-    running_ = false;
   }
 
   return 0;
