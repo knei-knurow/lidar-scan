@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "app.hpp"
+#include "../include/app.hpp"
 
 std::unique_ptr<App> app;
 

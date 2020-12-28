@@ -1,4 +1,4 @@
-#include "stream.hpp"
+#include "../include/stream.hpp"
 
 Stream::Stream(std::FILE* stream) {
   stream_ = stream;

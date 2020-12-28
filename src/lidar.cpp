@@ -1,4 +1,4 @@
-#include "lidar.hpp"
+#include "../include/lidar.hpp"
 
 RPLIDARPortGrabber::RPLIDARPortGrabber(std::string portname,
                                        unsigned baudrate,
