@@ -32,5 +32,8 @@ lidar.o: src/lidar.cpp
 stream.o: src/stream.cpp
 	$(CXX) $(CPPFLAGS) -c src/stream.cpp $(INCLUDES)
 
+install:
+	cp ./lidar-scan /usr/local/bin
+
 clean:
 	rm -f *.o src/*.o lidar-scan
