@@ -1,7 +1,10 @@
 rplidar_sdk
 .vs
 .vscode
+.idea
 vs
 Debug
 Release
 *.exe
+*.o
+/lidar-scan
