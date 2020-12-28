@@ -1,4 +1,5 @@
 #include "../include/app.hpp"
+#include <algorithm>
 
 //
 // App
