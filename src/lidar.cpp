@@ -10,8 +10,8 @@ RPLIDARPortGrabber::RPLIDARPortGrabber(std::string portname,
   status_ = true;
   buffer_ = new rplidar_response_measurement_node_hq_t[buffer_size_];
   if (rpm < MinRPLIDARRPM || rpm > MaxRPLIDARRPM) {
-    std::cerr << "ERROR: RPM value should be between " << MinRPLIDARRPM << " and " << MaxRPLIDARRPM
-              << "." << std::endl;
+    std::cerr << "lidar-scan: error: RPM value should be between " << MinRPLIDARRPM << " and "
+              << MaxRPLIDARRPM << std::endl;
     rpm = DefaultRPLIDARRPM;
   }
   rpm_ = rpm;
@@ -43,7 +43,7 @@ bool RPLIDARPortGrabber::print_info() {
   rplidar_response_device_info_t lidar_info;
   auto res = driver_->getDeviceInfo(lidar_info);
   if (IS_FAIL(res)) {
-    std::cerr << "ERROR: Unable to get device info response." << std::endl;
+    std::cerr << "lidar-scan: error: unable to get device info response" << std::endl;
     status_ = false;
     return false;
   }
@@ -67,7 +67,7 @@ bool RPLIDARPortGrabber::print_health() {
   rplidar_response_device_health_t lidar_health;
   auto res = driver_->getHealth(lidar_health);
   if (IS_FAIL(res)) {
-    std::cerr << "ERROR: Unable to get device health response." << std::endl;
+    std::cerr << "lidar-scan: error: unable to get device health response" << std::endl;
     status_ = false;
     return false;
   }
@@ -91,7 +91,7 @@ bool RPLIDARPortGrabber::print_scan_modes(std::vector<rplidar::RplidarScanMode>&
   auto res = driver_->getTypicalScanMode(default_mode);
   res = driver_->getAllSupportedScanModes(scan_modes);
   if (IS_FAIL(res)) {
-    std::cerr << "ERROR: Unable to get device scan modes response." << std::endl;
+    std::cerr << "lidar-scan: error: unable to get device scan modes response" << std::endl;
     return false;
   }
   std::clog << "Supported scan modes:" << std::endl;
@@ -111,40 +111,40 @@ bool RPLIDARPortGrabber::launch() {
   if (!status_)
     return false;
 
-  std::clog << "LIDAR connection:" << std::endl;
-  std::clog << "  Port: " << portname_ << "" << std::endl;
-  std::clog << "  Baudrate: " << baudrate_ << "" << std::endl;
+  std::clog << "lidar connection:" << std::endl;
+  std::clog << "  port: " << portname_ << "" << std::endl;
+  std::clog << "  baudrate: " << baudrate_ << "" << std::endl;
   auto res = driver_->connect(portname_.c_str(), baudrate_);
   if (IS_FAIL(res)) {
-    std::cerr << "ERROR: Unable to establish connection." << std::endl;
+    std::cerr << "lidar-scan: error: unable to establish connection" << std::endl;
     status_ = false;
     return false;
   }
-  std::clog << "Connection established." << std::endl;
+  std::clog << "lidar-scan: connection established" << std::endl;
 
   print_info();
   std::vector<rplidar::RplidarScanMode> scan_modes;
   _u16 mode;
   print_scan_modes(scan_modes, mode);
-  std::clog << "Selected scan mode: " << _u16(scan_mode_) << "." << std::endl;
-  std::clog << "Statring motor." << std::endl;
+  std::clog << "lidar-scan: selected scan mode: " << _u16(scan_mode_) << std::endl;
+  std::clog << "lidar-scan: starting motor..." << std::endl;
   res = driver_->startMotor();
   if (IS_FAIL(res)) {
-    std::cerr << "ERROR: Unable to start motor." << std::endl;
+    std::cerr << "lidar-scan: error: unable to start motor" << std::endl;
     status_ = false;
     return false;
   }
-  std::clog << "Setting motor speed to [rpm]: " << rpm_ << std::endl;
+  std::clog << "lidar-scan: setting motor speed to [rpm]: " << rpm_ << std::endl;
   res = driver_->setMotorPWM(rpm_);
   if (IS_FAIL(res)) {
-    std::cerr << "ERROR: Unable to set motor RPM." << std::endl;
+    std::cerr << "lidar-scan: error: unable to set motor RPM" << std::endl;
     status_ = false;
     return false;
   }
   print_health();
   res = driver_->startScanExpress(false, _u16(scan_mode_));
   if (IS_FAIL(res)) {
-    std::cerr << "ERROR: Unable to start scanning." << std::endl;
+    std::cerr << "lidar-scan: error: unable to start scanning" << std::endl;
     status_ = false;
     return false;
   }
@@ -157,7 +157,7 @@ bool RPLIDARPortGrabber::scan() {
   auto res = driver_->grabScanDataHq(buffer_, buffer_size);
   buffer_size_ = buffer_size;
   if (IS_FAIL(res)) {
-    std::cerr << "ERROR: Unable to read scanning data." << std::endl;
+    std::cerr << "lidar-scan: error: unable to read scanning data" << std::endl;
     status_ = false;
     return false;
   }
@@ -166,13 +166,20 @@ bool RPLIDARPortGrabber::scan() {
 }
 
 void RPLIDARPortGrabber::stop() {
-  std::clog << "Stopping motor and deallocating LIDAR driver." << std::endl;
+  std::clog << "lidar-scan: stopping motor...";
   auto res = driver_->stopMotor();
   if (IS_FAIL(res)) {
-    std::cerr << "ERROR: Unable to stop motor." << std::endl;
+    std::clog << std::endl;
+    std::cerr << "lidar-scan: error: unable to stop motor" << std::endl;
     status_ = false;
+  } else {
+    std::clog << "ok" << std::endl;
   }
+
+  std::clog << "lidar-scan: deallocating lidar driver...";
   driver_->disconnect();
+  std::clog << "ok" << std::endl;
+
   rplidar::RPlidarDriver::DisposeDriver(driver_);
 }
 

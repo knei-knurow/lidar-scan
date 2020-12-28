@@ -1,6 +1,6 @@
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 #include "../include/app.hpp"
 
 std::unique_ptr<App> app;
@@ -8,16 +8,15 @@ std::unique_ptr<App> app;
 #ifdef _WIN32
 #include <Windows.h>
 BOOL WINAPI ctrl_c_handler(DWORD signal) {
-    if (signal == CTRL_C_EVENT) {
-        if (app) {
-            app->close();
-            return TRUE;
-        }
-        else {
-            return FALSE;
-        }
+  if (signal == CTRL_C_EVENT) {
+    if (app) {
+      app->close();
+      return TRUE;
+    } else {
+      return FALSE;
     }
-    return TRUE;
+  }
+  return TRUE;
 }
 #endif
 
