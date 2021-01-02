@@ -18,13 +18,11 @@ BOOL WINAPI ctrl_c_handler(DWORD signal) {
   }
   return TRUE;
 }
-#endif
-
-#ifdef unix
+#elif __linux__
+#include <csignal>
 #include <unistd.h>
 void ctrl_c_handler(int signal){
   app->close();
-  return true;
 }
 #endif
 
@@ -33,13 +31,11 @@ int main(int argc, char** argv) {
   if (!SetConsoleCtrlHandler(ctrl_c_handler, TRUE)) {
     return -1;
   }
-#endif
-#ifdef unix
-  struct sigaction handler;
+#elif __linux__
+   struct sigaction handler;
    handler.sa_handler = ctrl_c_handler;
    sigemptyset(&handler.sa_mask);
    handler.sa_flags = 0;
-
    sigaction(SIGINT, &handler, NULL);
 #endif
 
