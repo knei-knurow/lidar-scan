@@ -14,4 +14,5 @@ lidar-scan port [options]
 -h --help       Print this message
 -m --mode       RPLIDAR mode (0 - 4)
 -r --rpm        RPLIDAR revolutions per minute (200 - 1023)
+--reset         Try to reset the RPLIDAR driver and exit
 ```
