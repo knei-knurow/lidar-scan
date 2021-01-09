@@ -31,6 +31,8 @@ void ctrl_c_handler(int signal) {
 #endif
 
 int main(int argc, char** argv) {
+  std::cout << "uznajmy że zmieniłem ikonkę i nazwe programu" << std::endl;
+
 #ifdef _WIN32
   if (!SetConsoleCtrlHandler(ctrl_c_handler, TRUE)) {
     return -1;
