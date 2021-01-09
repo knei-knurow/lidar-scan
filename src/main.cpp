@@ -32,6 +32,8 @@ void ctrl_c_handler(int signal) {
 
 int main(int argc, char** argv) {
   std::cout << "uznajmy że zmieniłem ikonkę i nazwe programu" << std::endl;
+  std::cout << "masz" << std::endl;
+  std::cout << "szymonie" << std::endl;
 
 #ifdef _WIN32
   if (!SetConsoleCtrlHandler(ctrl_c_handler, TRUE)) {
