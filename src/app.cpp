@@ -40,6 +40,12 @@ App::App(std::vector<std::string>& args) {
     running_ = false;
     return;
   }
+
+  // Try to reset the RPLIDAR driver
+  if (check_arg(args, "--reset", "--reset")) {
+    running_ = false;
+    return;
+  }
 }
 
 App::~App() {}
@@ -61,7 +67,8 @@ void App::print_help() {
             << "\t-h --help\tPrint this message\n"
             << "\t-m --mode\tRPLIDAR mode (0 - 4)\n"
             << "\t-r --rpm \tRPLIDAR revolutions per minute (" << MinRPLIDARRPM << " - "
-            << MaxRPLIDARRPM << ")\n";
+            << MaxRPLIDARRPM << ")\n"
+            << "\t--reset  \tTry to reset the RPLIDAR driver and close";
 }
 
 void App::close() {
