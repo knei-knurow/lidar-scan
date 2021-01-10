@@ -1,11 +1,11 @@
 #include <memory>
 #include <vector>
 
-// TODO: Use includes for this
-#include <csignal>
-#include <cstdlib>
-
 #include "../include/app.hpp"
+
+#if defined(__unix__) || defined(__unix) || ((defined(__APPLE__) && defined(__MACH__)))
+#define UNIX_LIKE
+#endif
 
 std::unique_ptr<App> app;
 
@@ -23,7 +23,11 @@ BOOL WINAPI ctrl_c_handler(DWORD signal) {
   return TRUE;
 }
 
-#else
+#endif
+
+#ifdef UNIX_LIKE
+#include <csignal>
+#include <cstdlib>
 void ctrl_c_handler(int signal) {
   std::cout << "closing using ctrl+c" << std::endl;
   app->close();
@@ -35,7 +39,10 @@ int main(int argc, char** argv) {
   if (!SetConsoleCtrlHandler(ctrl_c_handler, TRUE)) {
     return -1;
   }
-#else
+#endif
+#ifdef UNIX_LIKE
+#include <csignal>
+#include <cstdlib>
   struct sigaction handler;
   handler.sa_handler = ctrl_c_handler;
   sigemptyset(&handler.sa_mask);

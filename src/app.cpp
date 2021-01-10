@@ -74,7 +74,7 @@ void App::print_help() {
 }
 
 void App::close() {
-  std::clog << "Exit signal recieved.\n";
+  std::clog << "lidar-scan: exit signal recieved\n";
   running_ = false;
 }
 
