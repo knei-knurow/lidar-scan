@@ -1,10 +1,19 @@
-rplidar_sdk
-.vs
-.vscode
-.idea
-vs
-Debug
+# tools
+.vs/
+.vscode/
+.idea/
+
+# dependency dirs
+rplidar_sdk/
+
+# generated stuff
 Release
-*.exe
+Debug
 *.o
-/lidar-scan
+/lidar-vis
+/datasets/
+
+# other
+*.user
+*.xcf
+.DS_Store

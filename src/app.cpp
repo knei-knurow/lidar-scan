@@ -57,8 +57,6 @@ int App::run() {
     stream_->write_cloud(*cloud_);
   }
 
-
-
   return 0;
 }
 
