@@ -12,6 +12,8 @@ Debug
 *.o
 /lidar-scan
 /datasets/
+/html/
+/latex/
 
 # other
 *.user
