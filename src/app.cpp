@@ -65,7 +65,7 @@ void App::print_help() {
             << "\t-m --mode\tRPLIDAR mode (0 - 4)\n"
             << "\t-r --rpm \tRPLIDAR revolutions per minute (" << MinRPLIDARRPM << " - "
             << MaxRPLIDARRPM << ")\n"
-            << "\t--reset  \tTry to reset the RPLIDAR driver and close";
+            << "\t--reset  \tTry to reset the RPLIDAR driver and close\n";
 }
 
 void App::close() {
