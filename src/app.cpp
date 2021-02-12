@@ -1,14 +1,11 @@
 #include "../include/app.hpp"
 #include <algorithm>
 
-//
-// App
-//
 App::App(std::vector<std::string>& args) {
   running_ = true;
 
   // Print help
-  if (check_arg(args, "-h", "--help") || args.empty()) {
+  if (get_flag(args, "-h", "--help") || args.empty()) {
     print_help();
     running_ = false;
     return;
@@ -19,12 +16,12 @@ App::App(std::vector<std::string>& args) {
 
   // RPLIDAR RPM
   auto rpm = DefaultRPLIDARRPM;
-  std::stringstream(get_arg_value(args, "-r", "--rpm")) >> rpm;
+  std::stringstream(get_argument(args, "-r", "--rpm")) >> rpm;
 
   // RPLIDAR Mode
   RPLIDARScanModes mode;
   unsigned mode_temp = unsigned(RPLIDARScanModes::SENSITIVITY);
-  std::stringstream(get_arg_value(args, "-m", "--mode")) >> mode_temp;
+  std::stringstream(get_argument(args, "-m", "--mode")) >> mode_temp;
   mode = static_cast<RPLIDARScanModes>(mode_temp %
                                        unsigned(RPLIDARScanModes::RPLIDAR_SCAN_MODES_COUNT));
 
@@ -42,7 +39,7 @@ App::App(std::vector<std::string>& args) {
   }
 
   // Try to reset the RPLIDAR driver
-  if (check_arg(args, "--reset", "--reset")) {
+  if (get_flag(args, "--reset", "--reset")) {
     running_ = false;
     return;
   }
@@ -76,12 +73,12 @@ void App::close() {
   running_ = false;
 }
 
-bool App::check_arg(std::vector<std::string>& all_args,
-                    const std::string& short_arg,
-                    const std::string& long_arg) {
+bool App::get_flag(std::vector<std::string>& all_args,
+                   const std::string& flag_short,
+                   const std::string& flag_long) {
   auto it = std::find_if(
       all_args.begin(), all_args.end(),
-      [short_arg, long_arg](const std::string& s) { return s == short_arg || s == long_arg; });
+      [flag_short, flag_long](const std::string& s) { return s == flag_short || s == flag_long; });
 
   if (it == all_args.end()) {
     return false;
@@ -91,13 +88,13 @@ bool App::check_arg(std::vector<std::string>& all_args,
   return true;
 }
 
-std::string App::get_arg_value(std::vector<std::string>& all_args,
-                               const std::string& short_arg,
-                               const std::string& long_arg,
-                               const std::string& default_value) {
+std::string App::get_argument(std::vector<std::string>& all_args,
+                              const std::string& arg_short,
+                              const std::string& arg_long,
+                              const std::string& default_value) {
   auto it = std::find_if(
       all_args.begin(), all_args.end(),
-      [short_arg, long_arg](const std::string& s) { return s == short_arg || s == long_arg; });
+      [arg_short, arg_long](const std::string& s) { return s == arg_short || s == arg_long; });
 
   std::string value = default_value;
   if (it == all_args.end()) {
