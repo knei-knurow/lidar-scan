@@ -71,7 +71,7 @@ bool RPLIDARPortGrabber::print_health() {
     status_ = false;
     return false;
   }
-  std::clog << "LIDAR health: ";
+  std::clog << "lidar-scan: LIDAR health: ";
   if (lidar_health.status == RPLIDAR_STATUS_OK)
     std::clog << "Good";
   else if (lidar_health.status == RPLIDAR_STATUS_WARNING)
@@ -96,12 +96,16 @@ bool RPLIDARPortGrabber::print_scan_modes(std::vector<rplidar::RplidarScanMode>&
   }
   std::clog << "Supported scan modes:" << std::endl;
   for (const auto& scan_mode : scan_modes) {
+    float freq;
+    driver_->getFrequency(scan_mode, buffer_size_, freq);
+
     std::clog << "  ";
     std::clog << scan_mode.scan_mode << " (" << scan_mode.id;
     if (scan_mode.id == default_mode)
       std::clog << ", DEFAULT";
     std::clog << "), "
               << "sample time: " << scan_mode.us_per_sample << "us, "
+              << "frequency: " << freq << ", "
               << "max distance: " << scan_mode.max_distance << "m" << std::endl;
   }
   return true;
@@ -148,6 +152,7 @@ bool RPLIDARPortGrabber::launch() {
     status_ = false;
     return false;
   }
+
   status_ = true;
   return true;
 }
