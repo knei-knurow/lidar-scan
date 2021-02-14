@@ -29,7 +29,6 @@ BOOL WINAPI ctrl_c_handler(DWORD signal) {
 #include <csignal>
 #include <cstdlib>
 void ctrl_c_handler(int signal) {
-  std::cout << "closing using ctrl+c" << std::endl;
   app->close();
 }
 #endif
