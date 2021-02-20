@@ -25,9 +25,16 @@ App::App(std::vector<std::string>& args) {
   mode = static_cast<RPLIDARScanModes>(mode_temp %
                                        unsigned(RPLIDARScanModes::RPLIDAR_SCAN_MODES_COUNT));
 
+  // Grabber Mode
+  GrabberMode grabber_mode = GrabberMode::CLOUD_BY_CLOUD;
+  if (get_flag(args, "-p", "--point-by-point")) {
+    grabber_mode = GrabberMode::POINT_BY_POINT;
+  }
+
   // Initialize objects
   cloud_ = std::make_unique<CloudCyl>();
-  lidar_grabber_ = std::make_unique<RPLIDARPortGrabber>(port, DefaultBaudrate, mode, rpm);
+  lidar_grabber_ =
+      std::make_unique<RPLIDARPortGrabber>(port, DefaultBaudrate, grabber_mode, mode, rpm);
   if (!lidar_grabber_->get_status()) {
     running_ = false;
     return;
@@ -48,10 +55,19 @@ App::App(std::vector<std::string>& args) {
 App::~App() {}
 
 int App::run() {
+  auto grabber_mode = lidar_grabber_->get_grabber_mode();
+
   // Main program loop
   while (running_) {
     lidar_grabber_->read(*cloud_);
-    stream_->write_cloud(*cloud_);
+    if (grabber_mode == GrabberMode::CLOUD_BY_CLOUD) {
+      stream_->write_cloud(*cloud_);
+    } else if (grabber_mode == GrabberMode::POINT_BY_POINT) {
+      long long timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(
+                                std::chrono::system_clock::now().time_since_epoch())
+                                .count();
+      stream_->write_point(cloud_->pts[0], timestamp);
+    }
   }
 
   return 0;
@@ -65,6 +81,7 @@ void App::print_help() {
             << "\t-m --mode\tRPLIDAR mode (0 - 4)\n"
             << "\t-r --rpm \tRPLIDAR revolutions per minute (" << MinRPLIDARRPM << " - "
             << MaxRPLIDARRPM << ")\n"
+            << "-p --point-by-point\t Point-by-point scanning\n"
             << "\t--reset  \tTry to reset the RPLIDAR driver and close\n";
 }
 

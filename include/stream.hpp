@@ -10,7 +10,7 @@ class Stream {
   ~Stream();
 
   bool write_cloud_separator();
-  bool write_point(const PointCyl& pt_cyl);
+  bool write_point(const PointCyl& pt_cyl, long long time);
   bool write_cloud(const CloudCyl& cloud_cyl);
   bool get_status() const;
 
