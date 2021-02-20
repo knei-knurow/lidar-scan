@@ -22,10 +22,18 @@ enum class RPLIDARScanModes {
   RPLIDAR_SCAN_MODES_COUNT,
 };
 
+enum class GrabberMode {
+  CLOUD_BY_CLOUD,
+  POINT_BY_POINT,
+};
+
+const auto DefaultPortGrabber = GrabberMode::CLOUD_BY_CLOUD;
+
 class RPLIDARPortGrabber {
  public:
   RPLIDARPortGrabber(std::string portname,
                      unsigned baudrate = DefaultBaudrate,
+                     GrabberMode grabber_mode = DefaultPortGrabber,
                      RPLIDARScanModes scan_mode = RPLIDARScanModes::SENSITIVITY,
                      unsigned rpm = DefaultRPLIDARRPM);
   ~RPLIDARPortGrabber();
@@ -38,8 +46,10 @@ class RPLIDARPortGrabber {
   bool scan();
   void stop();
   bool get_status() const;
+  GrabberMode get_grabber_mode() const;
 
  private:
+  GrabberMode grabber_mode_;
   const std::string portname_;
   const int baudrate_;
   const RPLIDARScanModes scan_mode_;

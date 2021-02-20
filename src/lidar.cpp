@@ -2,12 +2,14 @@
 
 RPLIDARPortGrabber::RPLIDARPortGrabber(std::string portname,
                                        unsigned baudrate,
+                                       PortGrabberMode grabber_mode,
                                        RPLIDARScanModes scan_mode,
                                        unsigned rpm)
     : portname_(portname), baudrate_(baudrate), scan_mode_(scan_mode) {
   driver_ = rplidar::RPlidarDriver::CreateDriver();
   buffer_size_ = MaxRPLIDARCloudSize;
   status_ = true;
+  grabber_mode_ = grabber_mode;
   buffer_ = new rplidar_response_measurement_node_hq_t[buffer_size_];
   if (rpm < MinRPLIDARRPM || rpm > MaxRPLIDARRPM) {
     std::cerr << "lidar-scan: error: RPM value should be between " << MinRPLIDARRPM << " and "
@@ -158,21 +160,32 @@ bool RPLIDARPortGrabber::launch() {
 }
 
 bool RPLIDARPortGrabber::scan() {
-  size_t buffer_size = MaxRPLIDARCloudSize;
-  auto res = driver_->getScanDataWithIntervalHq(buffer_, buffer_size);
-  if (res == RESULT_OPERATION_TIMEOUT) {
-    std::clog << "timeout\t";
-  }
-  else if (res == RESULT_REMAINING_DATA) {
+  size_t buffer_size;
 
-  } else if (IS_FAIL(res)) {
-    std::cerr << "lidar-scan: error: unable to read scanning data" << std::endl;
-    status_ = false;
-    return false;
+  if (grabber_mode_ == PortGrabberMode::CLOUD_BY_CLOUD) {
+    buffer_size = MaxRPLIDARCloudSize;
+    auto res = driver_->grabScanDataHq(buffer_, buffer_size);
+    if (IS_FAIL(res)) {
+      std::cerr << "lidar-scan: error: unable to read scanning data" << std::endl;
+      status_ = false;
+      return false;
+    }
+  } else if (grabber_mode_ == PortGrabberMode::POINT_BY_POINT) {
+    buffer_size = 1;
+    auto res = driver_->getScanDataWithIntervalHq(buffer_, buffer_size);
+    if (res == RESULT_OPERATION_TIMEOUT) {
+      std::clog << "timeout\t";
+    } else if (res == RESULT_REMAINING_DATA) {
+      std::clog << "remain\t";
+    } else if (IS_FAIL(res)) {
+      std::cerr << "lidar-scan: error: unable to read scanning data" << std::endl;
+      status_ = false;
+      return false;
+    }
   }
-  
+
   buffer_size_ = buffer_size;
-  
+
   driver_->ascendScanData(buffer_, buffer_size);
   return true;
 }
@@ -197,4 +210,8 @@ void RPLIDARPortGrabber::stop() {
 
 bool RPLIDARPortGrabber::get_status() const {
   return status_;
+}
+
+GrabberMode RPLIDARPortGrabber::get_grabber_mode() const {
+  return grabber_mode_;
 }
