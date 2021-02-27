@@ -174,9 +174,9 @@ bool RPLIDARPortGrabber::scan() {
     buffer_size = 1;
     auto res = driver_->getScanDataWithIntervalHq(buffer_, buffer_size);
     if (res == RESULT_OPERATION_TIMEOUT) {
-      std::clog << "timeout\t";
+      // std::clog << "timeout\t";
     } else if (res == RESULT_REMAINING_DATA) {
-      std::clog << "remain\t";
+      // std::clog << "remain\t";
     } else if (IS_FAIL(res)) {
       std::cerr << "lidar-scan: error: unable to read scanning data" << std::endl;
       status_ = false;
