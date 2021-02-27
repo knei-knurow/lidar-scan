@@ -63,9 +63,11 @@ int App::run() {
     if (grabber_mode == GrabberMode::CLOUD_BY_CLOUD) {
       stream_->write_cloud(*cloud_);
     } else if (grabber_mode == GrabberMode::POINT_BY_POINT) {
-      long long timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(
+      long long timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
                                 std::chrono::system_clock::now().time_since_epoch())
                                 .count();
+      if (cloud_->size == 0)  // Timeout, still waiting for new data
+        continue;
       stream_->write_point(cloud_->pts[0], timestamp);
     }
   }
