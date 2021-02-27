@@ -23,7 +23,7 @@ bool Stream::write_cloud_separator() {
 }
 
 bool Stream::write_point(const PointCyl& pt_cyl, long long time) {
-  status_ = 0 <= std::fprintf(stream_, "%f %f %ll\n", pt_cyl.angle, pt_cyl.dist, time);
+  status_ = 0 <= std::fprintf(stream_, "%f %f %llu\n", pt_cyl.angle, pt_cyl.dist, time);
   return status_;
 }
 
