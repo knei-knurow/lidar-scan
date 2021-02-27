@@ -171,19 +171,46 @@ bool RPLIDARPortGrabber::scan() {
       return false;
     }
   } else if (grabber_mode_ == GrabberMode::POINT_BY_POINT) {
-    buffer_size = 1;
-    auto res = driver_->getScanDataWithIntervalHq(buffer_, buffer_size);
-    if (res == RESULT_OPERATION_TIMEOUT) {
-      buffer_size = 0;
-    } else if (res == RESULT_REMAINING_DATA) {
-      std::clog << "Remaining data";
-    } else if (IS_FAIL(res)) {
-      std::cerr << "lidar-scan: error: unable to read scanning data" << std::endl;
-      status_ = false;
-      return false;
-    }
-  }
+    // buffer_size = 1;
+    // auto res = driver_->getScanDataWithIntervalHq(buffer_, buffer_size);
+    // if (res == RESULT_OPERATION_TIMEOUT) {
+    //   buffer_size = 0;
+    // } else if (res == RESULT_REMAINING_DATA) {
+    //   std::clog << "R ";
+    //   buffer_size = 1;
+    //   res = driver_->getScanDataWithIntervalHq(buffer_ + 1, buffer_size);
+    //   buffer_size = 2;
+    // } else if (IS_FAIL(res)) {
+    //   std::cerr << "lidar-scan: error: unable to read scanning data" << std::endl;
+    //   status_ = false;
+    //   return false;
+    // }
 
+    buffer_size = 0;
+    bool remaining = false;
+    size_t append_buffer_size;
+    do {
+      append_buffer_size = 1;
+      auto res = driver_->getScanDataWithIntervalHq(buffer_ + buffer_size, append_buffer_size);
+      buffer_size++;
+      if (res == RESULT_OPERATION_TIMEOUT) {
+        buffer_size--;
+        remaining = false;
+      } else if (res == RESULT_REMAINING_DATA) {
+        // std::clog << "R";
+        // remaining = true;
+      } else if (IS_FAIL(res)) {
+        std::cerr << "lidar-scan: error: unable to read scanning data" << std::endl;
+        status_ = false;
+        return false;
+      }
+
+      if (res != RESULT_REMAINING_DATA)
+        std::cout << "rrrrrrrrrrrrr\n";
+    } while (remaining && buffer_size < MaxRPLIDARCloudSize);
+  }
+  // if (buffer_size)
+  // std::clog << " bs " << buffer_size << std::endl;
   buffer_size_ = buffer_size;
 
   if (buffer_size)

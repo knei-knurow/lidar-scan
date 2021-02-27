@@ -66,9 +66,8 @@ int App::run() {
       long long timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
                                 std::chrono::system_clock::now().time_since_epoch())
                                 .count();
-      if (cloud_->size == 0)  // Timeout, still waiting for new data
-        continue;
-      stream_->write_point(cloud_->pts[0], timestamp);
+      for (int i = 0; i < cloud_->size; i++)
+        stream_->write_point(cloud_->pts[i], timestamp);
     }
   }
 
