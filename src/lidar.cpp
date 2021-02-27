@@ -2,7 +2,7 @@
 
 RPLIDARPortGrabber::RPLIDARPortGrabber(std::string portname,
                                        unsigned baudrate,
-                                       PortGrabberMode grabber_mode,
+                                       GrabberMode grabber_mode,
                                        RPLIDARScanModes scan_mode,
                                        unsigned rpm)
     : portname_(portname), baudrate_(baudrate), scan_mode_(scan_mode) {
@@ -162,7 +162,7 @@ bool RPLIDARPortGrabber::launch() {
 bool RPLIDARPortGrabber::scan() {
   size_t buffer_size;
 
-  if (grabber_mode_ == PortGrabberMode::CLOUD_BY_CLOUD) {
+  if (grabber_mode_ == GrabberMode::CLOUD_BY_CLOUD) {
     buffer_size = MaxRPLIDARCloudSize;
     auto res = driver_->grabScanDataHq(buffer_, buffer_size);
     if (IS_FAIL(res)) {
@@ -170,7 +170,7 @@ bool RPLIDARPortGrabber::scan() {
       status_ = false;
       return false;
     }
-  } else if (grabber_mode_ == PortGrabberMode::POINT_BY_POINT) {
+  } else if (grabber_mode_ == GrabberMode::POINT_BY_POINT) {
     buffer_size = 1;
     auto res = driver_->getScanDataWithIntervalHq(buffer_, buffer_size);
     if (res == RESULT_OPERATION_TIMEOUT) {

@@ -5,7 +5,7 @@ App::App(std::vector<std::string>& args) {
   running_ = true;
 
   // Print help
-  if (get_flag(args, "-h", "--help") || args.empty()) {
+  if (args.empty()) {
     print_help();
     running_ = false;
     return;
@@ -81,7 +81,7 @@ void App::print_help() {
             << "\t-m --mode\tRPLIDAR mode (0 - 4)\n"
             << "\t-r --rpm \tRPLIDAR revolutions per minute (" << MinRPLIDARRPM << " - "
             << MaxRPLIDARRPM << ")\n"
-            << "-p --point-by-point\t Point-by-point scanning\n"
+            << "\t-p --point-by-point\t Point-by-point scanning\n"
             << "\t--reset  \tTry to reset the RPLIDAR driver and close\n";
 }
 
