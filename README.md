@@ -6,15 +6,15 @@ Simple and cross-platform tool for grabbing data from RPLIDAR A3A1 scanner. Base
 
 Video: [https://www.youtube.com/watch?v=MQhYTqz40xI](https://www.youtube.com/watch?v=MQhYTqz40xI)
 
-Indoor scanning:
+Indoor – walking around the house:
 
 ![doc/screenshots/garden.gif](https://raw.githubusercontent.com/knei-knurow/lidar-visualizations/main/doc/screenshots/room.gif)
 
-Outdoor, observating of passing cars:
+Outdoor near street – passing cars can be seen:
 
 ![doc/screenshots/cars.gif](https://raw.githubusercontent.com/knei-knurow/lidar-visualizations/main/doc/screenshots/cars.gif)
 
-Outdoor, lots of trees and shrubs around:
+Outdoor – lots of trees and shrubs around:
 
 ![doc/screenshots/garden.gif](https://raw.githubusercontent.com/knei-knurow/lidar-visualizations/main/doc/screenshots/garden.gif)
 
