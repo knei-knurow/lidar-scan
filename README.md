@@ -85,12 +85,6 @@ RPM = (1 / 360_CLOUD_TIME) * 60
 ```
 \* [the actual rpm might differ](#rplidar-software-rpm-vs-actual-rpm).
 
-### Przeliczanie RPM na RPS
-
-```
-RPM = (1 / 360_CLOUD_TIME) * 60
-```
-
 ## Compilation
 
 ### Linux, macOS
