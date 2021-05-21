@@ -10,7 +10,7 @@ Indoor scanning:
 
 ![doc/screenshots/garden.gif](https://raw.githubusercontent.com/knei-knurow/lidar-visualizations/main/doc/screenshots/room.gif)
 
-Outdoor, obervating of passing cars:
+Outdoor, observating of passing cars:
 
 ![doc/screenshots/cars.gif](https://raw.githubusercontent.com/knei-knurow/lidar-visualizations/main/doc/screenshots/cars.gif)
 
