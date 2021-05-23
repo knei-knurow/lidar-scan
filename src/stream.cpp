@@ -17,7 +17,7 @@ bool Stream::write_cloud_separator() {
   auto elapsed_time =
       std::chrono::duration_cast<std::chrono::milliseconds>(now - last_cloud_).count();
 
-  status_ = 0 <= std::fprintf(stream_, "! %i %llu\n", ++count_, elapsed_time);
+  status_ = 0 <= std::fprintf(stream_, "! %zu %llu\n", ++count_, elapsed_time);
   last_cloud_ = std::chrono::steady_clock::now();
   return status_;
 }
