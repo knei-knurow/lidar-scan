@@ -1,15 +1,16 @@
 name: Check code style
 
-on: [push]
+on: [pull_request]
 
 jobs:
   check-style:
-    name: Code style check
+    name: Check code style
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Run clang-format style check for C/C++ code
-        uses: jidicula/clang-format-action@v3.1.0
+        uses: jidicula/clang-format-action@v3.4.0
         with:
-          clang-format-version: '11'
-          check-path: '.'
+          clang-format-version: "11"
+          check-path: "."
+          fallback-style: "Chromium"
