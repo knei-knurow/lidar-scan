@@ -107,11 +107,11 @@ RPM = (1 / 360_CLOUD_TIME) * 60
 
 ## Usage
 
-When you have the `lidarvis` executable , you are able to start some scanning and visualizing.
+When you have the `lidar-scan` executable , you are able to start scanning.
 The program can be controlled via command line in such a way:
 
 ```sh
-lidar [options]
+$ lidar-scan [options]
 ```
 
 ### Point cloud output
