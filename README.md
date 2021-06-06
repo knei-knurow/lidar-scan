@@ -105,6 +105,27 @@ RPM = (1 / 360_CLOUD_TIME) * 60
 
    `$ make install`
 
+### Windows (Visual Studio)
+
+1. Make sure you have the prerequisites:
+   - Visual Studio with C++ toolchain. [visualstudio.microsoft.com/](https://visualstudio.microsoft.com/)
+   - RPLIDAR SDK - [github.com/Slamtec/rplidar_sdk](https://github.com/Slamtec/rplidar_sdk).
+2. Prepare RPLIDAR SDK:
+
+   - Move the directory containing RPLIDAR SDK to the path of this repository. Rename it to `rplidar-sdk`.
+
+   - Install CP2102 driver which allows communicating via USB and UART: `rplidar_sdk/tools/cp2102_driver`.
+
+   - Open VS solution with SDK: `rplidar_sdk/sdk/workspaces/vc**/sdk_and_demo.sln`.
+
+   - Compile `rplidar_driver` in _Debug_ and _Release_ mode. This will create two `.lib` files which will be used in our final app. You can find them here: `rplidar_sdk\sdk\output`. These files will be automatically found by the LV project, so don't move them.
+
+   - That's it. SDK is ready and you can close the VS project.
+
+3. Build:
+   - Open the VS solution of _lidar-visualizations_ - `lidar/lidar.sln`.
+   - Compile in _Debug_ or _Release_ mode.
+
 ## Usage
 
 When you have the `lidar-scan` executable , you are able to start scanning.
