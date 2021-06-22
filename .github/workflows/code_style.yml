@@ -1,16 +1,22 @@
-name: Check code style
+name: Check
 
 on: [pull_request]
 
 jobs:
-  check-style:
-    name: Check code style
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Run clang-format style check for C/C++ code
         uses: jidicula/clang-format-action@v3.4.0
         with:
           clang-format-version: "11"
           check-path: "."
           fallback-style: "Chromium"
+
+      - name: Install dependencies
+        run: ./install_rplidar
+
+      - name: Run build
+        run: make
