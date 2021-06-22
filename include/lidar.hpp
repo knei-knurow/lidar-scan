@@ -14,38 +14,40 @@ const unsigned DefaultRPLIDARRPM = 660;
 const unsigned DefaultBaudrate = 256000;
 
 enum class RPLIDARScanModes {
-  STANDARD,
-  EXPRESS,
-  BOOST,
-  SENSITIVITY,
-  STABILITY,
-  RPLIDAR_SCAN_MODES_COUNT,
+    STANDARD,
+    EXPRESS,
+    BOOST,
+    SENSITIVITY,
+    STABILITY,
+    RPLIDAR_SCAN_MODES_COUNT,
 };
 
 class RPLIDARPortGrabber {
- public:
-  RPLIDARPortGrabber(std::string portname,
-                     unsigned baudrate = DefaultBaudrate,
-                     RPLIDARScanModes scan_mode = RPLIDARScanModes::SENSITIVITY,
-                     unsigned rpm = DefaultRPLIDARRPM);
-  ~RPLIDARPortGrabber();
-  bool read(CloudCyl& cloud);
+   public:
+    RPLIDARPortGrabber(
+        std::string portname,
+        unsigned baudrate = DefaultBaudrate,
+        RPLIDARScanModes scan_mode = RPLIDARScanModes::SENSITIVITY,
+        unsigned rpm = DefaultRPLIDARRPM);
+    ~RPLIDARPortGrabber();
+    bool read(CloudCyl& cloud);
 
-  bool print_info();
-  bool print_health();
-  bool print_scan_modes(std::vector<rplidar::RplidarScanMode>& scan_modes, _u16& default_mode);
-  bool launch();
-  bool scan();
-  void stop();
-  bool get_status() const;
+    bool print_info();
+    bool print_health();
+    bool print_scan_modes(std::vector<rplidar::RplidarScanMode>& scan_modes,
+                          _u16& default_mode);
+    bool launch();
+    bool scan();
+    void stop();
+    bool get_status() const;
 
- private:
-  const std::string portname_;
-  const int baudrate_;
-  const RPLIDARScanModes scan_mode_;
-  int rpm_;
-  rplidar::RPlidarDriver* driver_;
-  rplidar_response_measurement_node_hq_t* buffer_;
-  size_t buffer_size_;
-  bool status_;
+   private:
+    const std::string portname_;
+    const int baudrate_;
+    const RPLIDARScanModes scan_mode_;
+    int rpm_;
+    rplidar::RPlidarDriver* driver_;
+    rplidar_response_measurement_node_hq_t* buffer_;
+    size_t buffer_size_;
+    bool status_;
 };
