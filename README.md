@@ -85,6 +85,31 @@ RPM = (1 / 360_CLOUD_TIME) * 60
 ```
 \* [the actual rpm might differ](#rplidar-software-rpm-vs-actual-rpm).
 
+### Point cloud output
+
+Output contains a series of point clouds. Each line (except for comments which must start with `#`) represents a single point which consists of an **angle value [°]** and a **distance value [mm]**. Both may be a floating
+point number, and have to be separated by any kind of white characters. Lines
+starting with `!` separates two point clouds. Each line marked with `!` should consist
+of the **ID number of the following point cloud** and **number of milliseconds elapsed from grabbing the previous one**. Clouds should be sorted by their ID number.
+
+Example:
+
+```
+! 0 0
+120  100
+240  100
+360  100
+! 1 500
+120  200
+240  200
+360  200
+! 2 500
+120  300
+240  300
+360  300
+! 3 500
+```
+
 ## Compilation
 
 ### Linux, macOS
@@ -125,51 +150,6 @@ RPM = (1 / 360_CLOUD_TIME) * 60
 3. Build:
    - Open the VS solution of _lidar-visualizations_ - `lidar/lidar.sln`.
    - Compile in _Debug_ or _Release_ mode.
-
-## Usage
-
-When you have the `lidar-scan` executable , you are able to start scanning.
-The program can be controlled via command line in such a way:
-
-```sh
-$ lidar-scan [options]
-```
-
-### Point cloud output
-
-Output contains a series of point clouds. Each line (except for comments which must start with `#`) represents a single point which consists of an **angle value [°]** and a **distance value [mm]**. Both may be a floating
-point number, and have to be separated by any kind of white characters. Lines
-starting with `!` separates two point clouds. Each line marked with `!` should consist
-of the **ID number of the following point cloud** and **number of milliseconds elapsed from grabbing the previous one**. Clouds should be sorted by their ID number.
-
-Example:
-
-```
-# A comment
-# ! ID Number   Elapsed time [ms]
-# Angle [°]   Distance [mm]
-! 0 0
-120  100
-240  100
-360  100
-! 1 500
-120  200
-240  200
-360  200
-! 2 500
-120  300
-240  300
-360  300
-! 3 500
-```
-
-Preview:
-
-```
-lidar -fs datasets/example-series.txt
-```
-
-![doc/screenshots/example.gif](https://raw.githubusercontent.com/knei-knurow/lidar-visualizations/main/doc/screenshots/example-series.gif)
 
 ## Thanks
 
